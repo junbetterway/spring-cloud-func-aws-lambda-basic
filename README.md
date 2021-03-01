@@ -1,12 +1,14 @@
 # Java Spring Cloud Function With AWS Lambda Basic
 Please check out my previous __[tutorial](https://github.com/junbetterway/spring-cloud-func-basic)__ which provides a basic introduction on using __[Spring Cloud Function](https://spring.io/projects/spring-cloud-function)__. 
 
-This time, we will integrate Spring Cloud Function with __[AWS Lambda](https://aws.amazon.com/lambda/)__ which is a serverless compute service that lets you run code without provisioning or managing servers, creating workload-aware cluster scaling logic, maintaining event integrations, or managing runtimes. You can check this __[link](https://docs.spring.io/spring-cloud-function/docs/3.1.1/reference/html/spring-cloud-function.html#_aws_lambda)__ for the complete guide on how to setup __AWS Lambda__ with __Spring Cloud Functions__.
+This time, we will integrate Spring Cloud Function with __[AWS Lambda](https://aws.amazon.com/lambda/)__ which is a serverless compute service that lets you run code without provisioning or managing servers, creating workload-aware cluster scaling logic, maintaining event integrations, or managing runtimes. 
+
+You can check this __[reference](https://docs.spring.io/spring-cloud-function/docs/3.1.1/reference/html/spring-cloud-function.html#_aws_lambda)__ for the complete guide on how to setup __AWS Lambda__ with __Spring Cloud Functions__.
 
 *__Note:__ We will use the __traditional bean definitions__ instead of the __functional bean style__ for this tutorial.*
 
 # Getting Started
-The main goal of Spring Cloud Function is to make your application code to be cloud-agnostic. Our entry-point SpringcloudfuncApplication.class
+The main goal of __Spring Cloud Function__ is to make your application code to be cloud-agnostic. Our entry-point __[SpringcloudfuncApplication](https://github.com/junbetterway/spring-cloud-func-aws-lambda-basic/blob/main/src/main/java/com/junbetterway/serverless/springcloudfunc/SpringcloudfuncApplication.java)__.class
 
 ```
 @SpringBootApplication
@@ -32,7 +34,7 @@ public class SpringcloudfuncApplication {
 The interesting part of the code above is that we do not see any AWS-related configuration to setup our application to AWS Lambda. In fact, we just have to add the needed dependencies and deploy our package!
 
 # Add Needed Dependencies
-In order to run Spring Cloud Function applications on AWS Lambda, we need to add below dependency.
+In order to run __Spring Cloud Function__ applications on __AWS Lambda__, we need to add below dependency.
 
 ```
 <dependency>
@@ -79,13 +81,13 @@ There will be three JARs under the __target__ folder. Select the one with the na
 # Configure AWS Lambda
 1. Go to __[AWS Lambda](https://aws.amazon.com/lambda/)__ then create a function by providing a unique name (__e.g.,__ MyCreateAccountFunc) and runtime environment (__e.g.,__ Java 11)
 2. Once successfully created, let's setup the configuration by uploading the AWS deployable JAR (__springcloudfunc-0.0.1-SNAPSHOT-aws.jar__) under the __Function Code__ section
-3. Update the handler under __Runtime settings__ section and paste below default handler provided by Spring Cloud Function
+3. Update the *Handler* field under __Runtime settings__ section and paste below default handler provided by Spring Cloud Function
 
 ```
 org.springframework.cloud.function.adapter.aws.FunctionInvoker::handleRequest
 ```
 
-4. Let's edit the __Environment variables__ and add a new entry __SPRING_CLOUD_FUNCTION_DEFINITION__ with the value based on your bean method name. Take note that AWS Lambda can process __ONLY ONE__ function at a time hence, if your code has more than one bean functions then create a new AWS lambda for that. For our case, we have two traditional bean definitions thus, we select only one. For this step, we select the __createAccount__ bean thus, you should have an environment variable-value pair of:
+4. Let's edit the __Environment variables__ and add a new entry __SPRING_CLOUD_FUNCTION_DEFINITION__ with the value based on your bean method name. Take note that AWS Lambda can process __ONLY ONE__ function at a time hence, if your code has more than one bean functions then create a new AWS lambda for that. For our case, we have two traditional bean definitions thus, we select only one. For this step, we select the __createAccount__ bean which will result to:
 
 ```
 SPRING_CLOUD_FUNCTION_DEFINITION=createAccount
@@ -124,7 +126,11 @@ In reality, we need to expose an API endpoint to be invoked by users (or custome
 5. Select __Open__ security mechanism for now. One would want to use *JWT authorizer* but this is out of scope for this basic tutorial.
 6. Click __Add__ button
 
-API Gateway should now be added as part of your triggers under Layers of Designer section. Click this API Gateway and expand details. Take note of the API endpoint which could be something like this: https://ovspn81pl0.execute-api.ap-southeast-1.amazonaws.com/default/MyCreateAccountFunc
+API Gateway should now be added as part of your triggers under *Layers* of __Designer__ section. Click this API Gateway and expand details. Take note of the API endpoint which could be something like this: 
+
+```
+https://ovspn81pl0.execute-api.ap-southeast-1.amazonaws.com/default/MyCreateAccountFunc
+```
 
 # Test AWS Lambda Function
 Now one can invoke the API Gateway endpoint above in any API tool such as Postman or cURL. Using cURL, we can call:
